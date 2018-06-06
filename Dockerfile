@@ -6,7 +6,7 @@ FROM node:carbon
 RUN mkdir /usr/src/app
 
 # Copying the code to the folder
-COPY src/* /usr/src/app/
+COPY src/* /usr/src/app/ 
 
 WORKDIR /usr/src/app
 RUN npm install && npm install express --save

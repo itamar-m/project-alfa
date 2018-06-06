@@ -1,5 +1,5 @@
 
-console.log("Handlers module\n");
+console.log("Handlers module\n"); 
 
 exports.rootHandler = (request, response) => {
 
