@@ -1,15 +1,18 @@
 {
-  "name": "nodejs",
+  "name": "web-express",
   "version": "1.0.0",
-  "description": "", 
+  "description": "this is just a sample web server",
   "main": "handlers.js",
   "dependencies": {
-    "express": "^4.16.3",
-    "lodash": "^4.17.5"
+    "express": "^4.16.3"
   },
   "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/itamar-m/project-alfa"
   },
   "author": "kbulix",
   "license": "ISC"
