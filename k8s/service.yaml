@@ -1,7 +1,7 @@
 kind: Service
 apiVersion: v1
 metadata:
-  name: web-express-Service
+  name: web-express-service
   namespace: development
 spec:
   selector:
