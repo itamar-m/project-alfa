@@ -1,0 +1,32 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: web-express-deplyoment
+  labels:
+    app: web-exp
+  namespace: development
+
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: web-exp
+
+  template:
+    metadata:
+      labels:
+        app: web-exp
+    spec:
+      containers:
+        - name: web-express
+          image: kbulix/web-express
+          volumeMounts:
+          - name: workdir-volume
+            mountPath: /storage
+          ports:
+          - containerPort: 80
+
+      volumes:
+        - name: workdir-volume
+          hostPath:
+            path: /home/devel/dstorage
