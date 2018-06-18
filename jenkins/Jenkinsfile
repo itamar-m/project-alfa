@@ -1,5 +1,10 @@
 pipeline {
   agent any
+  environment {
+    DOCKER_HUB_USER = "kbulix" // This is Docker Hub user
+    PROJECT = "web-express"
+
+  }
   stages {
     stage('myStage'){
       steps {
@@ -8,7 +13,15 @@ pipeline {
     }
     stage('Build') {
       steps {
-        sh 'ls'
+        sh "docker image build -t ${DOCKER_HUB_USER}/${PROJECT}:beta-${env.BRANCH_NAME}-${env.BUILD_NUMBER} ."
+        withCredentials([usernamePassword(
+                credentialsId: "docker",
+                usernameVariable: "USER",
+                passwordVariable: "PASS"
+        )]) {
+        sh "docker login -u '$USER' -p '$PASS'"
+        }
+        sh "docker image push ${DOCKER_HUB_USER}/${PROJECT}:beta-${env.BRANCH_NAME}-${env.BUILD_NUMBER}"
       }
     }
   }
