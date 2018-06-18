@@ -6,7 +6,7 @@ docker build -qt [image_name:tag] .
 
 # Run an image in a container, under specific port and in background.
 docker run -p [port of exposed service] -d [image_name:tag]
- 
+
 # Stop a container
   docker stop [container_id]
 
