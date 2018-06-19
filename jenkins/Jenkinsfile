@@ -22,7 +22,7 @@ pipeline {
     }
     stage('deplpoy') {
       steps {
-        sh "kubectl get pods"
+        sh "crul http://192.168.99.100:30000"
       }
     }
   }
