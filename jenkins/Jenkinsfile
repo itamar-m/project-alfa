@@ -6,11 +6,6 @@ pipeline {
 
   }
   stages {
-    stage('myStage'){
-      steps {
-        sh 'pwd'
-      }
-    }
     stage('Build') {
       steps {
         sh "docker image build -t ${DOCKER_HUB_USER}/${PROJECT}:beta-${env.BRANCH_NAME}-${env.BUILD_NUMBER} ."
