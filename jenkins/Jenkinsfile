@@ -20,5 +20,10 @@ pipeline {
         sh "docker image push ${DOCKER_HUB_USER}/${PROJECT}:beta-${env.BRANCH_NAME}-${env.BUILD_NUMBER}"
       }
     }
+    stage('deplpoy') {
+      steps {
+        sh "kubectl get pods"
+      }
+    }
   }
 }
