@@ -1,29 +1,26 @@
-pipeline {
-  agent any
-  environment {
-    DOCKER_HUB_USER = "kbulix" // This is Docker Hub user
-    PROJECT = "web-express"
+node {
+    def app
 
-  }
-  stages {
-    stage('Build') {
-      steps {
-        sh "docker image build -t ${DOCKER_HUB_USER}/${PROJECT}:beta-${env.BRANCH_NAME}-${env.BUILD_NUMBER} ."
+    stage('Clone repository') {
+        /* Let's make sure we have the repository cloned to our workspace */
+        checkout scm
+    }
 
-        withCredentials([usernamePassword(
-                credentialsId: "docker",
-                usernameVariable: "USER",
-                passwordVariable: "PASS"
-        )]) {
-        sh "docker login -u '$USER' -p '$PASS'"
+    stage('Build image') {
+        /* This builds the actual image; synonymous to
+         * docker build on the command line */
+
+        app = docker.build("${DOCKER_HUB_USER}/${PROJECT}:${env.BRANCH_NAME}")
+    }
+
+    stage('Push image') {
+        /* Finally, we'll push the image with two tags:
+         * First, the incremental build number from Jenkins
+         * Second, the 'latest' tag.
+         * Pushing multiple tags is cheap, as all the layers are reused. */
+        docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials') {
+            app.push("-${env.BUILD_NUMBER}")
+            app.push("latest")
         }
-        sh "docker image push ${DOCKER_HUB_USER}/${PROJECT}:beta-${env.BRANCH_NAME}-${env.BUILD_NUMBER}"
-      }
     }
-    stage('deplpoy') {
-      steps {
-        sh "crul http://192.168.99.100:30000"
-      }
-    }
-  }
 }
