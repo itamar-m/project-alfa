@@ -1,4 +1,4 @@
-node ('docker-slave') {
+node {
     def app
 
     stage('Clone repository') {
