@@ -1,5 +1,5 @@
 /* Choose the appropriated agent to run the pipeline */
-node ('docker.kbulix.slave') {
+node ('docker.local.jenkins.slave') {
     def app
 
     stage('checkout') {
