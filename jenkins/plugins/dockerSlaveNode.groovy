@@ -15,7 +15,7 @@ def dockerTemplateBaseParameters = [
   environmentsString: '',
   extraHostsString:   '',
   hostname:           '',
-  image:              'kbulix/jenkinsci-slave :latest',
+  image:              'kbulix/jenkinsci-slave:latest',
   macAddress:         '',
   memoryLimit:        null,
   memorySwap:         null,
@@ -38,7 +38,7 @@ def dockerCloudParameters = [
   containerCapStr:  '4',
   credentialsId:    '',
   dockerHostname:   '',
-  name:             'docker.slave',
+  name:             'docker.repository',
   readTimeout:      60,
   serverUrl:        'unix:///var/run/docker.sock',
   version:          ''
