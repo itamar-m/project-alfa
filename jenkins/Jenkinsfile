@@ -5,13 +5,13 @@ node ('docker.kbulix.slave') {
     stage('checkout') {
         /* Let's make sure the repository cloned to Jenkins Workspace */
         checkout scm
-        slackNotify channel: '#general', message: 'Starting Jenkins pipeline for web-express application.'
+        slackSend channel: '#general', message: 'Starting Jenkins pipeline for web-express application.'
     }
 
     stage('build') {
         /* This builds the actual image */
         app = docker.build("kbulix/web-express")
-        slackNotify channel: '#general', message: 'web-express build phase complete.'
+        slackSend channel: '#general', message: 'web-express build phase complete.'
     }
 
     stage('release') {
@@ -24,6 +24,6 @@ node ('docker.kbulix.slave') {
             app.push("latest")
         }
 
-        slackNotify channel: '#general', message: 'web-express release phase complete.'
+        slackSend channel: '#general', message: 'web-express release phase complete.'
     }
 }
