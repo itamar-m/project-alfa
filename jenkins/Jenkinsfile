@@ -9,7 +9,7 @@ node ('docker.local.jenkins.slave') {
         checkout scm
         slackSend channel: '#general', color: "good", message: 'Starting Jenkins pipeline for web-express application. (1/3)'
       } catch (exec) {
-        slackSend channel: '#general', color: "failed",  message: 'web-express checkout phase failed.'
+        slackSend channel: '#general', color: " danger",  message: 'web-express checkout phase failed.'
       }
     }
 
@@ -34,7 +34,7 @@ node ('docker.local.jenkins.slave') {
         slackSend channel: '#general', color: "good",  message: 'web-express release phase complete. 3/3'
         }
       catch (exec) {
-        slackSend channel: '#general', color: "failed",  message: 'web-express release phase failed.'
+        slackSend channel: '#general', color: " danger",  message: 'web-express release phase failed.'
       }
     }
 
@@ -46,7 +46,7 @@ node ('docker.local.jenkins.slave') {
 
   } catch (exec) {
     if (currentBuild.currentResult == 'ABORTED') {
-      slackSend channel: '#general', color: "failed",  message: 'web-express pipeline has been aborted.'
+      slackSend channel: '#general', color: " danger",  message: 'web-express pipeline has been aborted.'
     }
   }
 }
