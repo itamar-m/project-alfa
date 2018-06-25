@@ -7,7 +7,7 @@ node ('docker.local.jenkins.slave') {
         /* Let's make sure the repository cloned to Jenkins Workspace */
         checkout scm
         slackSend channel: '#general', color: "green", message: 'Starting Jenkins pipeline for web-express application. (1/3)'
-      } catch () {
+      } catch (exec) {
         slackSend channel: '#general', color: "red",  message: 'web-express checkout phase failed.'
       }
     }
