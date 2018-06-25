@@ -29,17 +29,17 @@ def dockerTemplateBaseParameters = [
 
 def DockerTemplateParameters = [
   instanceCapStr: '4',
-  labelString:    'docker.slave',
+  labelString:    'docker.local.jenkins.slave',
   remoteFs:       ''
 ]
 
 def dockerCloudParameters = [
-  connectTimeout:   3,
+  connectTimeout:   300,
   containerCapStr:  '4',
   credentialsId:    '',
   dockerHostname:   '',
-  name:             'docker.repository',
-  readTimeout:      60,
+  name:             'docker.local',
+  readTimeout:      300,
   serverUrl:        'unix:///var/run/docker.sock',
   version:          ''
 ]
