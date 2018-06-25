@@ -19,7 +19,7 @@ node ('docker.local.jenkins.slave') {
         sh 'docker rmi -f ${app.imageName()}'
         slackSend channel: '#general', color: "good", message: 'web-express build phase complete. (2/3)'
     }
-/*
+
     stage('release') {
       try {
         /* Finally, we'll push the image with two tags:
@@ -43,7 +43,7 @@ node ('docker.local.jenkins.slave') {
       sh 'docker ps --filter "status=exited" | grep "days ago" | awk "{print $1}" | xargs --no-run-if-empty'
       // sh 'docker ps --filter "status=exited" | grep "days ago" | awk "{print $1}" | xargs --no-run-if-empty docker rm'
     }
-*/    
+
   } catch (exec) {
     if (currentBuild.currentResult == 'ABORTED') {
       slackSend channel: '#general', color: "failed",  message: 'web-express pipeline has been aborted.'
