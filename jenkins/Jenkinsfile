@@ -37,9 +37,8 @@ node ('docker.local.jenkins.slave') {
       }
     }
 
-
     stage ('clean up') {
-      sh 'docker rmi -f {app.imageName()}'
+      sh 'docker rmi -f ${app.imageName()}'
       sh 'docker ps --filter "status=exited" | grep "days ago" | awk "{print $1}" | xargs --no-run-if-empty'
       // sh 'docker ps --filter "status=exited" | grep "days ago" | awk "{print $1}" | xargs --no-run-if-empty docker rm'
     }
