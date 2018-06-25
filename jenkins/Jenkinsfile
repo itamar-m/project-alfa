@@ -1,5 +1,6 @@
 /* Choose the appropriated agent to run the pipeline */
 node ('docker.local.jenkins.slave') {
+  try {
     def app
 
     stage('checkout') {
@@ -42,4 +43,9 @@ node ('docker.local.jenkins.slave') {
       sh 'docker ps --filter "status=exited" | grep "days ago" | awk "{print $1}" | xargs --no-run-if-empty'
       // sh 'docker ps --filter "status=exited" | grep "days ago" | awk "{print $1}" | xargs --no-run-if-empty docker rm'
     }
+  } catch (exec) {
+    if (currentBuild.currentResult == 'ABORTED') {
+      slackSend channel: '#general', color: "red",  message: 'web-express pipeline has been aborted.'
+    }
+  }
 }
