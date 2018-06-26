@@ -1,5 +1,6 @@
 /* Choose the appropriated agent to run the pipeline */
-node ('docker.local.jenkins.slave') {
+/* node ('docker.local.jenkins.slave') { */
+node ('kubernetes.slave') {
   try {
     def app
 
@@ -17,7 +18,7 @@ node ('docker.local.jenkins.slave') {
         /* This builds the actual image */
         app = docker.build("kbulix/web-express")
         def imageName = app.ImageName()
-        sh 'docker image ${imageName}'
+        sh 'kubectl get pods'
         slackSend channel: '#general', color: "good", message: 'web-express build phase complete. (2/3)'
     }
 
