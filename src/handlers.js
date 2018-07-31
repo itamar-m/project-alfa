@@ -1,9 +1,9 @@
 
-console.log("Handlers module\n"); 
+console.log("Handlers module\n");
 
 exports.rootHandler = (request, response) => {
 
-  response.write ("Hello HTTP, module.");
+  response.write ("Hello George, module.");
   response.end();
 };
 
