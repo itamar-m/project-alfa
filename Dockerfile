@@ -1,7 +1,6 @@
 # Base image for nodes.js applications
 FROM node:carbon
 
-
 # Create app directory
 RUN mkdir /usr/src/app
 # RUN mkdir /usr/src/app/node_modules
