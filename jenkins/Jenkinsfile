@@ -8,17 +8,17 @@ node ('docker.local.jenkins.slave') {
       try {
         /* Let's make sure the repository cloned to Jenkins Workspace */
         checkout scm
-        slackSend channel: '#general', color: "good", message: 'Starting Jenkins pipeline for web-express application. (1/3)'
+        slackSend channel: '#devops', color: "good", message: 'Starting Jenkins pipeline for web-express application. (1/3)'
       } catch (exec) {
-        slackSend channel: '#general', color: "danger",  message: 'web-express checkout phase failed.'
+        slackSend channel: '#devops', color: "danger",  message: 'web-express checkout phase failed.'
       }
     }
 
     stage('build') {
         /* This builds the actual image */
         app = docker.build("kbulix/web-express")
-        def imageName = app.ImageName()
-        slackSend channel: '#general', color: "good", message: 'web-express build phase complete. (2/3)'
+         *//* def imageName = app.ImageName()
+        slackSend channel: '#devops', color: "good", message: 'web-express build phase complete. (2/3)'
     }
 
     stage('release') {
@@ -32,10 +32,10 @@ node ('docker.local.jenkins.slave') {
             app.push("latest")
         }
 
-        slackSend channel: '#general', color: "good",  message: 'web-express release phase complete. 3/3'
+        slackSend channel: '#devops', color: "good",  message: 'web-express release phase complete. 3/3'
         }
       catch (exec) {
-        slackSend channel: '#general', color: "danger",  message: 'web-express release phase failed.'
+        slackSend channel: '#devops', color: "danger",  message: 'web-express release phase failed.'
       }
     }
 
@@ -48,7 +48,7 @@ node ('docker.local.jenkins.slave') {
 
   } catch (exec) {
     if (currentBuild.currentResult == 'ABORTED') {
-      slackSend channel: '#general', color: "danger",  message: 'web-express pipeline has been aborted.'
+      slackSend channel: '#devops', color: "danger",  message: 'web-express pipeline has been aborted.'
     }
   }
 }
