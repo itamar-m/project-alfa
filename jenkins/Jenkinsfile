@@ -8,7 +8,7 @@ node ('docker.local.jenkins.slave') {
       try {
         /* Let's make sure the repository cloned to Jenkins Workspace */
         checkout scm
-        slackSend channel: '#devops', color: "good", message: 'Starting Jenkins pipeline for web-express application. (1/3)'
+        slackSend channel: '#devops', color: "good", message: 'Starting Jenkins pipeline for web-express application. (1/4)'
       } catch (exec) {
         slackSend channel: '#devops', color: "danger",  message: 'web-express checkout phase failed.'
       }
@@ -18,7 +18,7 @@ node ('docker.local.jenkins.slave') {
         /* This builds the actual image */
         app = docker.build("kbulix/web-express")
          /* def imageName = app.ImageName() */
-        slackSend channel: '#devops', color: "good", message: 'web-express build phase complete. (2/3)'
+        slackSend channel: '#devops', color: "good", message: 'web-express build phase complete. (2/4)'
     }
 
     stage('release') {
@@ -32,18 +32,30 @@ node ('docker.local.jenkins.slave') {
             app.push("latest")
         }
 
-        slackSend channel: '#devops', color: "good",  message: 'web-express release phase complete. 3/3'
+        slackSend channel: '#devops', color: "good",  message: 'web-express release phase complete. 3/4 '
         }
       catch (exec) {
         slackSend channel: '#devops', color: "danger",  message: 'web-express release phase failed.'
       }
     }
 
+    stage('deploy') {
+      try {
+        sh 'docker ps | grep web-express | wc -l'
+	      def return = sh returnStdout: true, script: 'docker ps | grep web-express | wc -l'
+	      sh 'docker images'
+        
+        slackSend channel: '#devops', color: "good",  message: 'web-express deploy phase complete. 3/3'
+        }
+      catch (exec) {
+        slackSend channel: '#devops', color: "danger",  message: 'web-express deploy phase failed.'
+      }
+    }
+
+
     stage ('clean up') {
-      def imageName = app.ImageName()
-      sh 'docker image ${imageName}'
-      // sh 'docker ps --filter "status=exited" | grep "days ago" | awk "{print $1}" | xargs --no-run-if-empty'
-      // sh 'docker ps --filter "status=exited" | grep "days ago" | awk "{print $1}" | xargs --no-run-if-empty docker rm'
+      /* def imageName = app.ImageName() */
+      sh 'docker container prune -f'
     }
 
   } catch (exec) {
