@@ -42,7 +42,7 @@ node ('docker.local.jenkins.slave') {
       try {
 
 	      def container = sh ( script: 'docker ps | grep web-express | wc -l').trim()
-        prinln container
+        println container
 
         app.run('-p 8080')
 
