@@ -42,8 +42,9 @@ node ('docker.local.jenkins.slave') {
       try {
 
 	      def container = sh ( script: 'docker ps | grep web-express | wc -l').trim()
-
-        if ( container == 0 ) {
+        sh "echo $container"
+        
+        if ( container == "0" ) {
           sh ( script: 'docker run -p 8080 -d \"app.ImageName()\"')
         }
 
