@@ -17,7 +17,6 @@ node ('docker.local.jenkins.slave') {
     stage('build') {
         /* This builds the actual image */
         app = docker.build("kbulix/web-express")
-         /* def imageName = app.ImageName() */
         slackSend channel: '#devops', color: "good", message: 'web-express build phase complete. (2/4)'
     }
 
@@ -27,10 +26,10 @@ node ('docker.local.jenkins.slave') {
          * First, the incremental build number from Jenkins
          * Second, the 'latest' tag.
          * Pushing multiple tags is cheap, as all the layers are reused. */
-        docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials') {
-            app.push("${env.BUILD_NUMBER}")
-            app.push("latest")
-        }
+      /*  docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials') {
+       *     app.push("${env.BUILD_NUMBER}")
+       *     app.push("latest")
+       *  } */
 
         slackSend channel: '#devops', color: "good",  message: 'web-express release phase complete. 3/4 '
         }
@@ -43,7 +42,11 @@ node ('docker.local.jenkins.slave') {
       try {
 
 	      def container = sh ( script: 'docker ps | grep web-express | wc -l').trim()
-	      
+
+        if ( container == 0 ) {
+          sh ( script: 'docker run -p 8080 -d \"app.ImageName()\"')
+        }
+
         slackSend channel: '#devops', color: "good",  message: 'web-express deploy phase complete. 3/3'
         }
       catch (exec) {
@@ -54,7 +57,7 @@ node ('docker.local.jenkins.slave') {
 
     stage ('clean up') {
       /* def imageName = app.ImageName() */
-      sh 'docker container prune -f'
+      'docker container prune -f'
     }
 
   } catch (exec) {
