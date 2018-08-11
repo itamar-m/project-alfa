@@ -31,7 +31,7 @@ node ('docker.local.jenkins.slave') {
        *     app.push("latest")
        *  } */
 
-        slackSend channel: '#devops', color: "good",  message: 'web-express release phase complete. 3/4 '
+        slackSend channel: '#devops', color: "good",  message: 'web-express release phase complete. (3/4)'
         }
       catch (exec) {
         slackSend channel: '#devops', color: "danger",  message: 'web-express release phase failed.'
@@ -43,12 +43,9 @@ node ('docker.local.jenkins.slave') {
 
 	      def container = sh ( script: 'docker ps | grep web-express | wc -l').trim()
         sh "echo $container"
-        
-        if ( container == "0" ) {
-          sh ( script: 'docker run -p 8080 -d \"app.ImageName()\"')
-        }
+        app.run("-p 8080")
 
-        slackSend channel: '#devops', color: "good",  message: 'web-express deploy phase complete. 3/3'
+        slackSend channel: '#devops', color: "good",  message: 'web-express deploy phase complete. (4/4)'
         }
       catch (exec) {
         slackSend channel: '#devops', color: "danger",  message: 'web-express deploy phase failed.'
