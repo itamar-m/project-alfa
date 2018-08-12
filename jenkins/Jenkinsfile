@@ -17,6 +17,7 @@ node ('docker.local.jenkins.slave') {
     stage('build') {
         /* This builds the actual image */
         app = docker.build("kbulix/web-express")
+        println app.imageName()
         slackSend channel: '#devops', color: "good", message: 'web-express build phase complete. (2/4)'
     }
 
@@ -44,8 +45,7 @@ node ('docker.local.jenkins.slave') {
 	      def container = sh ( returnStdout: true, script: 'docker ps | grep web-express | wc -l').trim()
 
         if ( container == '0' ) {
-          println app.ImageName()
-          app.Image.run('-p 8080')
+          println app.imageName()
         }
 
 
