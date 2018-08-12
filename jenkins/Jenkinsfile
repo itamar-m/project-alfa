@@ -51,9 +51,9 @@ node ('docker.local.jenkins.slave') {
           container = app.run('-p 8080')
         } else {
           def containerRunning = sh ( returnStdout: true, script: "docker ps | grep ${app.imageName()}  | cut -b-12").trim()
-          println containerRunning
+          sh ( script: "docker stop -f ${containerRunning} | docker rm -f ${containerRunning})
+          container = app.run('-p 8080')
         }
-
 
         slackSend channel: '#devops', color: "good",  message: 'web-express deploy phase complete. (4/4)'
         }
