@@ -44,13 +44,13 @@ node ('docker.local.jenkins.slave') {
     stage('deploy') {
       try {
 
-	      def containerIsRunning = sh ( returnStdout: true, script: """docker ps | grep $app.imageName() | wc -l""").trim()
+	      def containerIsRunning = sh ( returnStdout: true, script: "docker ps | grep $app.imageName() | wc -l").trim()
 
         if ( containerIsRunning == '0' ) {
           app.tag("latest")
           container = app.run('-p 8080')
         } else {
-          def containerRunning = sh ( returnStdout: true, script: """docker ps | grep $app.imageName()  | cut -b-12""").trim()
+          def containerRunning = sh ( returnStdout: true, script: "docker ps | grep $app.imageName()  | cut -b-12").trim()
           println containerRunning
         }
 
