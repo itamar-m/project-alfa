@@ -44,7 +44,8 @@ node ('docker.local.jenkins.slave') {
 	      def container = sh ( returnStdout: true, script: 'docker ps | grep web-express | wc -l').trim()
 
         if ( container == '0' ) {
-          println container
+          println app.ImageName()
+          app.Image.run('-p 8080')
         }
 
 
