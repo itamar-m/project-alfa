@@ -42,7 +42,11 @@ node ('docker.local.jenkins.slave') {
       try {
 
 	      def container = sh ( returnStdout: true, script: 'docker ps | grep web-express | wc -l').trim()
-        println container
+
+        if ( container == 0 ) {
+          println container
+        }
+
 
         slackSend channel: '#devops', color: "good",  message: 'web-express deploy phase complete. (4/4)'
         }
