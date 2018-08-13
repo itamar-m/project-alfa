@@ -54,7 +54,7 @@ node ('docker.local.jenkins.slave') {
        * echo k8s
        */
 
-       k8s = sh ( returnStdout: true, script: "kubectl set image deploy/web-express deploy/web-express=docker.io/kbulix/web-express:latest").trim()
+       k8s = sh ( returnStdout: true, script: "kubectl set image deployments/web-express deployments/web-express=docker.io/kbulix/web-express:latest").trim()
        echo k8s
 
         slackSend channel: '#devops', color: "good",  message: 'web-express deploy phase complete. (4/4)'
