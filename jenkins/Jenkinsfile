@@ -32,11 +32,10 @@ node ('docker.local.jenkins.slave') {
         docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials') {
              app.push("${env.BUILD_NUMBER}")
              app.push("latest")
-             app.tag("latest")
         }
 
         slackSend channel: '#devops', color: "good",  message: 'web-express release phase complete. (3/4)'
-        }
+      }
       catch (exec) {
         slackSend channel: '#devops', color: "danger",  message: 'web-express release phase failed.'
       }
@@ -44,21 +43,16 @@ node ('docker.local.jenkins.slave') {
 
     stage('deploy') {
       try {
+        k8s = sh ( returnStdout: true, script: "kubectl get deployment | grep web-express | wc -l").trim()
 
-      /*
-       * k8s = sh ( returnStdout: true, script: "kubectl get pods").trim()
-       * echo k8s
-       * k8s = sh ( returnStdout: true, script: "kubectl create -f jenkins/k8s/web-express-k8s.yaml").trim()
-       * echo k8s
-       * k8s = sh ( returnStdout: true, script: "kubectl get pods").trim()
-       * echo k8s
-       */
-
-       echo sh ( returnStdout: true, script: "kubectl --namespace=development  set image deployments/web-express web-express=docker.io/kbulix/web-express:${env.BUILD_NUMBER}").trim()
-       
-
-        slackSend channel: '#devops', color: "good",  message: 'web-express deploy phase complete. (4/4)'
+        if ( k8s == '0' ) {
+          echo sh ( returnStdout: true, script: "kubectl create -f jenkins/k8s/web-express-k8s.yaml").trim()
+        } else {
+          echo sh ( returnStdout: true, script: "kubectl --namespace=development  set image deployments/web-express web-express=docker.io/kbulix/web-express:${env.BUILD_NUMBER}").trim()
         }
+
+         slackSend channel: '#devops', color: "good",  message: 'web-express deploy phase complete. (4/4)'
+      }
       catch (exec) {
         echo exec
         slackSend channel: '#devops', color: "danger",  message: 'web-express deploy phase failed.'
@@ -66,8 +60,8 @@ node ('docker.local.jenkins.slave') {
     }
 
     stage ('clean up') {
-      /* def imageName = app.ImageName() */
-      'docker container prune -f'
+      echo sh ( returnStdout: true, script: "docker rmi -f ${app.id}").trim()
+      sh 'docker container prune -f'
     }
 
   } catch (exec) {
