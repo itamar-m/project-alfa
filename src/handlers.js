@@ -3,7 +3,7 @@ console.log("Handlers module\n");
 
 exports.rootHandler = (request, response) => {
 
-  response.write ("Hello Uncle Itamar, module.");
+  response.write ("Hello Uncle Dan, module.");
   response.end();
 };
 
