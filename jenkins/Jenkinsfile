@@ -45,7 +45,9 @@ node ('docker.local.jenkins.slave') {
     stage('deploy') {
       try {
 
-        k8s = sh ( returnStdout: true, script: "kubectl create -f k8s/web-express-k8s.yaml").trim() 
+        k8s = sh ( returnStdout: true, script: "kubectl get pods").trim()
+        echo k8s
+        k8s = sh ( returnStdout: true, script: "kubectl create -f jenkins/k8s/web-express-k8s.yaml").trim()
         echo k8s
         k8s = sh ( returnStdout: true, script: "kubectl get pods").trim()
         echo k8s
