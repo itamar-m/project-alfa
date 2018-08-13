@@ -28,11 +28,11 @@ node ('docker.local.jenkins.slave') {
          * First, the incremental build number from Jenkins
          * Second, the 'latest' tag.
          * Pushing multiple tags is cheap, as all the layers are reused. */
-      /*  docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials') {
-       *     app.push("${env.BUILD_NUMBER}")
-       *     app.push("latest")
-       *     app.tag("latest")
-       *  } */
+         /*  docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials') {
+          *     app.push("${env.BUILD_NUMBER}")
+          *     app.push("latest")
+          *     app.tag("latest")
+          *  } */
 
         slackSend channel: '#devops', color: "good",  message: 'web-express release phase complete. (3/4)'
         }
@@ -44,7 +44,8 @@ node ('docker.local.jenkins.slave') {
     stage('deploy') {
       try {
 
-        def k8s = sh ( returnStdout: true, 'kubectl create -f k8s/web-express-k8s.yaml').trim()
+        /* def k8s = sh ( returnStdout: true, 'kubectl create -f k8s/web-express-k8s.yaml').trim() */
+        def k8s = sh ( returnStdout: true, 'kubectl get pods').trim()
         println k8s
 
         slackSend channel: '#devops', color: "good",  message: 'web-express deploy phase complete. (4/4)'
