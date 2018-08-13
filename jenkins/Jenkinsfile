@@ -4,6 +4,7 @@ node ('docker.local.jenkins.slave') {
   try {
     def app
     def container
+    def k8s
 
     stage('checkout') {
       try {
@@ -44,13 +45,15 @@ node ('docker.local.jenkins.slave') {
     stage('deploy') {
       try {
 
-        /* def k8s = sh ( returnStdout: true, 'kubectl create -f k8s/web-express-k8s.yaml').trim() */
-        def k8s = sh ( returnStdout: true, 'kubectl get pods').trim()
-        println k8s
+        k8s = sh ( returnStdout: true, script: "kubectl create -f k8s/web-express-k8s.yaml").trim() */
+        echo k8s
+        k8s = sh ( returnStdout: true, script: "kubectl get pods").trim()
+        echo k8s
 
         slackSend channel: '#devops', color: "good",  message: 'web-express deploy phase complete. (4/4)'
         }
       catch (exec) {
+        echo exec
         slackSend channel: '#devops', color: "danger",  message: 'web-express deploy phase failed.'
       }
     }
