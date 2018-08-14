@@ -18,7 +18,7 @@ node ('docker.local.jenkins.slave') {
 
     stage('build') {
         /* This builds the actual image */
-        app = docker.build("kbulix/web-express:latest")
+        app = docker.build("kbulix/web-express")
         println app.imageName()
         slackSend channel: '#devops', color: "good", message: 'web-express build phase complete. (2/4)'
     }
@@ -29,8 +29,9 @@ node ('docker.local.jenkins.slave') {
          * First, the incremental build number from Jenkins
          * Second, the 'latest' tag.
          * Pushing multiple tags is cheap, as all the layers are reused. */
-        docker.withRegistry('docker.io/kbulix', 'docker-hub-credentials') {
-             app.push("${env.BUILD_NUMBER}")
+        docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials') {
+             app.push("v${env.BUILD_NUMBER}")
+             app.push("latest")
         }
 
         slackSend channel: '#devops', color: "good",  message: 'web-express release phase complete. (3/4)'
@@ -47,7 +48,7 @@ node ('docker.local.jenkins.slave') {
         if ( k8s == '0' ) {
           echo sh ( returnStdout: true, script: "kubectl create -f jenkins/k8s/web-express-k8s.yaml").trim()
         } else {
-          echo sh ( returnStdout: true, script: "kubectl --namespace=development  set image deployments/web-express web-express=docker.io/kbulix/web-express:${env.BUILD_NUMBER}").trim()
+          echo sh ( returnStdout: true, script: "kubectl --namespace=development  set image deployments/web-express web-express=docker.io/kbulix/web-express:v${env.BUILD_NUMBER}").trim()
         }
 
          slackSend channel: '#devops', color: "good",  message: 'web-express deploy phase complete. (4/4)'
@@ -59,8 +60,10 @@ node ('docker.local.jenkins.slave') {
     }
 
     stage ('clean up') {
+      echo {app.id}
       echo sh ( returnStdout: true, script: "docker rmi -f ${app.id}").trim()
-      sh 'docker container prune -f'
+      /* echo sh ( returnStdout: true, script: "docker rmi -f ${app.id}").trim() */
+      /* sh 'docker container prune -f' */
     }
 
   } catch (exec) {
