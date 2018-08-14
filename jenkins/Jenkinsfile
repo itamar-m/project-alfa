@@ -18,7 +18,7 @@ node ('docker.local.jenkins.slave') {
 
     stage('build') {
         /* This builds the actual image */
-        app = docker.build("docker.io/kbulix/web-express:latest")
+        app = docker.build("kbulix/web-express:latest")
         println app.imageName()
         slackSend channel: '#devops', color: "good", message: 'web-express build phase complete. (2/4)'
     }
@@ -29,7 +29,7 @@ node ('docker.local.jenkins.slave') {
          * First, the incremental build number from Jenkins
          * Second, the 'latest' tag.
          * Pushing multiple tags is cheap, as all the layers are reused. */
-        docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials') {
+        docker.withRegistry('docker.io/kbulix', 'docker-hub-credentials') {
              app.push("${env.BUILD_NUMBER}")
         }
 
