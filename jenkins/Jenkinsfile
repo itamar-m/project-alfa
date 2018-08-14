@@ -19,7 +19,6 @@ node ('docker.local.jenkins.slave') {
     stage('build') {
         /* This builds the actual image */
         app = docker.build("kbulix/web-express")
-        println app.imageName()
         slackSend channel: '#devops', color: "good", message: 'web-express build phase complete. (2/4)'
     }
 
@@ -37,6 +36,7 @@ node ('docker.local.jenkins.slave') {
         slackSend channel: '#devops', color: "good",  message: 'web-express release phase complete. (3/4)'
       }
       catch (exec) {
+        echo exec
         slackSend channel: '#devops', color: "danger",  message: 'web-express release phase failed.'
       }
     }
@@ -61,7 +61,7 @@ node ('docker.local.jenkins.slave') {
 
     stage ('clean up') {
       echo app.id
-      echo sh ( returnStdout: true, script: "docker rmi -f ${app.id}").trim()
+      /* echo sh ( returnStdout: true, script: "docker rmi -f ${app.id}").trim() */
       /* echo sh ( returnStdout: true, script: "docker rmi -f ${app.id}").trim() */
       /* sh 'docker container prune -f' */
     }
