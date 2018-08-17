@@ -57,8 +57,8 @@ node ('docker.local.jenkins.slave') {
 
     stage ('clean up') {
 
-      int previousVersion = 0
-      previousVersion = ${env.BUILD_NUMBER} - 1
+      int previousVersion = new Integer ( ${env.BUILD_NUMBER} )
+      previousVersion =  previousVersion - 1
 
       echo app.id
       echo sh ( returnStdout: true, script: "docker rmi -f kbulix/web-express:v${previousVersion}").trim()
