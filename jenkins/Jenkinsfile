@@ -48,7 +48,7 @@ node ('docker.local.jenkins.slave') {
         if ( k8s == '0' ) {
           echo sh ( returnStdout: true, script: "kubectl create -f jenkins/k8s/web-express-k8s.yaml").trim()
         } else {
-          echo sh ( returnStdout: true, script: "kubectl --namespace=development  set image deployments/web-express web-express=docker.io/kbulix/web-express:latest").trim()
+          echo sh ( returnStdout: true, script: "kubectl --namespace=development  set image deployments/web-express web-express=docker.io/kbulix/web-express:v${env.BUILD_NUMBER}").trim()
         }
 
          slackSend channel: '#devops', color: "good",  message: 'web-express deploy phase complete. (4/4)'

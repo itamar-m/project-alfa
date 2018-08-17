@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
         - name: web-express
-          image: docker.io/kbulix/web-express:latest
+          image: docker.io/kbulix/web-express:v1
           volumeMounts:
           - name: workdir-volume
             mountPath: /storage
