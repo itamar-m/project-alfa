@@ -30,7 +30,6 @@ node ('docker.local.jenkins.slave') {
          * Pushing multiple tags is cheap, as all the layers are reused. */
         docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials') {
              app.push("v${env.BUILD_NUMBER}")
-             app.push("latest")
         }
 
         slackSend channel: '#devops', color: "good",  message: 'web-express release phase complete. (3/4)'
@@ -60,10 +59,13 @@ node ('docker.local.jenkins.slave') {
     }
 
     stage ('clean up') {
+
+      def previousVersion = 1 - ${env.BUILD_NUMBER}
+
       echo app.id
-      /* echo sh ( returnStdout: true, script: "docker rmi -f ${app.id}").trim() */
-      /* echo sh ( returnStdout: true, script: "docker rmi -f ${app.id}").trim() */
-      /* sh 'docker container prune -f' */
+      echo sh ( returnStdout: true, script: "docker rmi -f kbulix/web-express:v${previousVersion}").trim()
+      echo sh ( returnStdout: true, script: "docker rmi -f registry.hub.docker.com/kbulix/web-express:v${previousVersion}").trim()
+      echo sh ( returnStdout: true, script: "docker container prune -f").trim()
     }
 
   } catch (exec) {
