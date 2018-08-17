@@ -24,10 +24,7 @@ node ('docker.local.jenkins.slave') {
 
     stage('release') {
       try {
-        /* Finally, we'll push the image with two tags:
-         * First, the incremental build number from Jenkins
-         * Second, the 'latest' tag.
-         * Pushing multiple tags is cheap, as all the layers are reused. */
+        /* Finally, we'll push the image. */
         docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials') {
              app.push("v${env.BUILD_NUMBER}")
         }
@@ -60,10 +57,12 @@ node ('docker.local.jenkins.slave') {
 
     stage ('clean up') {
 
-      def previousVersion = 1 - ${env.BUILD_NUMBER}
+      def previousVersion = 0
+      previousVersion = ${env.BUILD_NUMBER} - 1
 
       echo app.id
       echo sh ( returnStdout: true, script: "docker rmi -f kbulix/web-express:v${previousVersion}").trim()
+      echo sh ( returnStdout: true, script: "docker rmi -f kbulix/web-express:latest").trim()
       echo sh ( returnStdout: true, script: "docker rmi -f registry.hub.docker.com/kbulix/web-express:v${previousVersion}").trim()
       echo sh ( returnStdout: true, script: "docker container prune -f").trim()
     }
