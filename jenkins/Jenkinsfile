@@ -57,7 +57,7 @@ node ('docker.local.jenkins.slave') {
 
     stage ('clean up') {
 
-      def previousVersion = 0
+      int previousVersion = 0
       previousVersion = ${env.BUILD_NUMBER} - 1
 
       echo app.id
