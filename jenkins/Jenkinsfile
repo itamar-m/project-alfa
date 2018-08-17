@@ -5,6 +5,8 @@ node ('docker.local.jenkins.slave') {
     def app
     def container
     def k8s
+    def previousImage
+    def previousVersion
 
     stage('checkout') {
       try {
@@ -44,6 +46,8 @@ node ('docker.local.jenkins.slave') {
         if ( k8s == '0' ) {
           echo sh ( returnStdout: true, script: "kubectl create -f jenkins/k8s/web-express-k8s.yaml").trim()
         } else {
+          previousImage = sh ( returnStdout: true, script: "kubectl describe deployment | grep Image | awk '{print $2}'").trim()
+          previousVersion = sh ( returnStdout: true, script:  kubectl --namespace=development describe deployment | grep Image | awk '{print $2}' | awk 'BEGIN{FS="\:"\ } {print $2}').trim()
           echo sh ( returnStdout: true, script: "kubectl --namespace=development  set image deployments/web-express web-express=docker.io/kbulix/web-express:v${env.BUILD_NUMBER}").trim()
         }
 
@@ -58,9 +62,9 @@ node ('docker.local.jenkins.slave') {
     stage ('clean up') {
 
       echo app.id
-      echo sh ( returnStdout: true, script: "docker rmi -f kbulix/web-express:v${previousVersion}").trim()
+      echo sh ( returnStdout: true, script: "docker rmi -f ${previousImage}").trim()
       echo sh ( returnStdout: true, script: "docker rmi -f kbulix/web-express:latest").trim()
-      echo sh ( returnStdout: true, script: "docker rmi -f registry.hub.docker.com/kbulix/web-express:v${previousVersion}").trim()
+      echo sh ( returnStdout: true, script: "docker rmi -f registry.hub.docker.com/kbulix/web-express:${previousVersion}").trim()
       echo sh ( returnStdout: true, script: "docker container prune -f").trim()
     }
 
