@@ -3,7 +3,7 @@ console.log("Handlers module\n");
 
 exports.rootHandler = (request, response) => {
 
-  response.write ("Hello Lovely Ruppert, module.");
+  response.write ("Now I am demonstration the Jenkins Pipeline..");
   response.end();
 };
 
