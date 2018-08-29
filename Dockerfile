@@ -21,4 +21,4 @@ RUN npm install express --save
 EXPOSE 80
 
 # Command line to be executed
-CMD node web-express.js
+CMD [ "node", "web-express.js"]

@@ -1,4 +1,5 @@
 /* Choose the appropriated agent to run the pipeline */
+/* Deploy over Kubernetes cluster */
 
 node ('docker.local.jenkins.slave') {
   try {

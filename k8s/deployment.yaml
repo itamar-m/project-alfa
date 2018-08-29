@@ -1,3 +1,17 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: web-express-service
+  namespace: development
+spec:
+  selector:
+    app: web-exp
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 8080
+  type: NodePort
+---
 kind: Deployment
 apiVersion: apps/v1
 metadata:
