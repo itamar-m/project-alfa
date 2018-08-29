@@ -11,10 +11,10 @@ COPY src/web-express.js /usr/src/app/
 COPY src/package-lock.json /usr/src/app/
 COPY src/package.json /usr/src/app/
 
-# Copying the dependencies
-# COPY src/node_modules /usr/src/app/node_modules
-
+# Setting WORKDIR
 WORKDIR /usr/src/app
+
+# Installing dependencies
 RUN npm install express --save
 
 # Service Port
